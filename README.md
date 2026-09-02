@@ -71,6 +71,26 @@ The body mesh is generated from primitives in code rather than shipped as an ass
 every good-looking human GLB is either research-licence-only or a multi-megabyte
 download, and for "which part of me, and roughly where" a parametric body is enough.
 
+## Verified end to end
+
+Everything below was exercised against the live deployment, not just built:
+sign-in, the consent gate, capture with the quality gate, a four-model
+assessment, change detection between two dated photos, the doctor claim/review
+loop, the patient's copy of the signed opinion, Stripe checkout, GDPR export,
+and account deletion including the image files.
+
+Five real bugs came out of that pass and are fixed: the auth callback handled
+only one of Supabase's two link formats; the consent form was served from
+inside the gate it was meant to satisfy; assessments were computed and then
+rejected by an RLS policy that granted SELECT but not INSERT; the body map
+named limbs for the side of the screen rather than the side of the body; and
+accounts predating this app had no profile row, so their consent silently
+saved nothing.
+
+```bash
+npm test    # headless body-map picking, including the laterality assertion
+```
+
 ## Running it
 
 ```bash
