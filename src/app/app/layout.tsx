@@ -86,7 +86,7 @@ function ConsentRequired() {
         Photos of your skin are health data under GDPR, so we need your explicit consent before
         storing any. It takes a minute and you can withdraw it at any time.
       </p>
-      <Link href="/app/onboarding" className="btn btn-primary">
+      <Link href="/onboarding" className="btn btn-primary">
         Read it and continue
       </Link>
     </div>
