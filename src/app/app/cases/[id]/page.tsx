@@ -34,10 +34,6 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ id:
     : { data: [] };
 
   const review = reviews?.[0];
-  const doctorName = review
-    ? (await supabase.from("skinscan_doctors").select("full_name, license_country").eq("id", review.doctor_id).maybeSingle())
-        .data
-    : null;
 
   return (
     <div style={{ maxWidth: 720 }}>
@@ -101,8 +97,10 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ id:
 
           <p className="muted" style={{ margin: "1rem 0 0", fontSize: "0.8rem", lineHeight: 1.55, borderTop: "1px solid var(--line)", paddingTop: "0.7rem" }}>
             {URGENCY[review.urgency].note} Signed {formatDate(review.signed_at)}
-            {doctorName ? ` by ${doctorName.full_name}, registered in ${doctorName.license_country}` : ""}. This is a
-            remote opinion based on photographs and does not replace an in-person examination.
+            {review.signed_by_name
+              ? ` by ${review.signed_by_name}${review.signed_by_license_country ? `, registered in ${review.signed_by_license_country}` : ""}`
+              : ""}
+            . This is a remote opinion based on photographs and does not replace an in-person examination.
           </p>
         </section>
       )}

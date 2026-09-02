@@ -33,9 +33,21 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ error: "This case has already been answered" }, { status: 409 });
   }
 
+  // Stamp the clinician's identity onto the document itself. A signed review
+  // has to stay readable and attributable even if the account is later deleted,
+  // so it must not depend on a join to a row that might not be there.
+  const { data: doctor } = await admin
+    .from("skinscan_doctors")
+    .select("full_name, license_number, license_country")
+    .eq("id", user.id)
+    .maybeSingle();
+
   const { error } = await admin.from("skinscan_reviews").insert({
     case_id: id,
     doctor_id: user.id,
+    signed_by_name: doctor?.full_name ?? null,
+    signed_by_license_number: doctor?.license_number ?? null,
+    signed_by_license_country: doctor?.license_country ?? null,
     lesion_id: b.lesion_id ?? null,
     impression: String(b.impression).slice(0, 4000),
     differential: Array.isArray(b.differential) ? b.differential.slice(0, 8).map(String) : [],

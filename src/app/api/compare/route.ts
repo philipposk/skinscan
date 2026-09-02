@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { compareImages } from "@/lib/ai/triage";
-import { maxBand, type RiskBand } from "@/lib/clinical";
+import { maxBand, recallDaysFor, type RiskBand } from "@/lib/clinical";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -84,16 +84,18 @@ export async function POST(req: Request) {
     if (result.bandBump) {
       const { data: lesion } = await supabase
         .from("skinscan_lesions")
-        .select("latest_risk_band")
+        .select("latest_risk_band, next_review_due")
         .eq("id", b.lesion_id)
         .maybeSingle();
       const next = maxBand((lesion?.latest_risk_band as RiskBand) ?? "reassuring", result.bandBump);
+      // Detecting a change must never push a review further out than it already
+      // is. If the lesion is already on a three-day recall, a fourteen-day one
+      // from here would be a downgrade dressed up as an escalation.
+      const proposed = new Date(Date.now() + recallDaysFor(next) * 86_400_000).toISOString().slice(0, 10);
+      const due = lesion?.next_review_due && lesion.next_review_due < proposed ? lesion.next_review_due : proposed;
       await supabase
         .from("skinscan_lesions")
-        .update({
-          latest_risk_band: next,
-          next_review_due: new Date(Date.now() + 14 * 86_400_000).toISOString().slice(0, 10),
-        })
+        .update({ latest_risk_band: next, next_review_due: due })
         .eq("id", b.lesion_id);
     }
 

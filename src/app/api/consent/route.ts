@@ -44,9 +44,13 @@ export async function POST(req: Request) {
   if (consentErr) return NextResponse.json({ error: consentErr.message }, { status: 500 });
 
   const p = body.profile ?? {};
+  // Upsert, not update. Accounts that predate this app have no profile row, and
+  // an update that matches nothing succeeds silently — which sent those users
+  // straight back to the consent gate with nothing to show for it.
   const { error: profileErr } = await supabase
     .from("skinscan_profiles")
-    .update({
+    .upsert({
+      id: user.id,
       consent_version: body.version,
       consent_at: new Date().toISOString(),
       consent_ip: ip,
@@ -58,8 +62,7 @@ export async function POST(req: Request) {
       immunosuppressed: !!p.immunosuppressed,
       many_moles: !!p.many_moles,
       history_of_sunburns: !!p.history_of_sunburns,
-    })
-    .eq("id", user.id);
+    });
 
   if (profileErr) return NextResponse.json({ error: profileErr.message }, { status: 500 });
   return NextResponse.json({ ok: true });
