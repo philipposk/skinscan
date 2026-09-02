@@ -97,7 +97,12 @@ async function gemini(apiKey: string, model: string, req: VisionRequest): Promis
       contents: [{ role: "user", parts }],
       generationConfig: {
         temperature: req.temperature ?? 0,
-        maxOutputTokens: req.maxTokens ?? 1600,
+        // Gemini spends this budget on reasoning tokens too, so a limit sized
+        // for the answer alone truncates the JSON mid-string and the whole vote
+        // is lost. Reasoning buys nothing for a structured description, so it is
+        // switched off and the ceiling is generous.
+        maxOutputTokens: (req.maxTokens ?? 1600) * 2,
+        thinkingConfig: { thinkingBudget: 0 },
         responseMimeType: "application/json",
       },
       // Medical imagery trips the default filters; we still want a refusal to
@@ -114,6 +119,9 @@ async function gemini(apiKey: string, model: string, req: VisionRequest): Promis
 
   const cand = json?.candidates?.[0];
   if (!cand) throw new Error(`gemini: no candidate (${JSON.stringify(json?.promptFeedback ?? {}).slice(0, 200)})`);
+  if (cand.finishReason && cand.finishReason !== "STOP") {
+    throw new Error(`gemini: stopped early (${cand.finishReason})`);
+  }
   return (cand.content?.parts ?? []).map((p: { text?: string }) => p.text ?? "").join("");
 }
 
