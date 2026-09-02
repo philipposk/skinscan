@@ -29,7 +29,7 @@ const CONSENTS = [
   {
     key: "research_optin",
     required: false,
-    title: "Optional: help improve skin datasets later",
+    title: "Help improve skin datasets later",
     body: "Not active yet, and nothing happens if you tick it today. If we ever contribute anonymised images to open research, we would ask you again first. Untick it and everything else still works.",
   },
 ];

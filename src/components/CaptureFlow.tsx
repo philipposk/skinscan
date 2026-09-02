@@ -311,7 +311,7 @@ export default function CaptureFlow({
             <p className="muted" style={{ fontSize: "0.82rem", margin: "0.6rem 0 0", lineHeight: 1.5 }}>
               {pin
                 ? `Pinned: ${pin.pin.mesh} (${pin.site}${pin.laterality !== "midline" ? `, ${pin.laterality}` : ""}). Click again to move it.`
-                : "Optional, but the reason you will still know which spot this was next year."}
+                : "Optional, but the reason you will still know which spot this was next year. The figure is facing you, so its left arm is on your right — the same way a doctor describes sides."}
             </p>
           </section>
         </>

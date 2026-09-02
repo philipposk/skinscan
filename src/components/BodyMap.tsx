@@ -130,9 +130,8 @@ export default function BodyMap({
       <Canvas
         camera={{ position: [0, 1.25, 4.4], fov: 42 }}
         dpr={[1, 2]}
-        gl={{ antialias: true, toneMapping: THREE.NoToneMapping }}
+        gl={{ antialias: true, alpha: true, toneMapping: THREE.NoToneMapping }}
       >
-        <color attach="background" args={["#00000000"]} />
         <ambientLight intensity={0.75} />
         <directionalLight position={[3, 6, 5]} intensity={1.1} />
         <directionalLight position={[-4, 2, -5]} intensity={0.45} />
