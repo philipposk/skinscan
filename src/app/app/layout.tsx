@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import PageAssistantWidget from "@/components/PageAssistantWidget";
 
 export const dynamic = "force-dynamic";
 
@@ -74,6 +75,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <div style={{ flex: 1, maxWidth: 1080, width: "100%", margin: "0 auto", padding: "1.5rem 1.25rem 4rem" }}>
         {consented ? children : <ConsentRequired />}
       </div>
+
+      {/* Only for consented, signed-in users: the assistant's routes spend money
+          and it should not greet someone who has not agreed to anything yet. */}
+      {consented && <PageAssistantWidget />}
     </div>
   );
 }

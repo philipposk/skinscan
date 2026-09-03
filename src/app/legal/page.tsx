@@ -122,12 +122,31 @@ export default function LegalPage() {
         </li>
       </ul>
 
+      <h2 style={H}>The in-app assistant</h2>
+      <p style={S}>
+        Signed-in pages carry a small assistant that helps you use the app — photo technique, what an
+        outcome means, finding a spot you logged months ago, exporting your records. It is bound by
+        the same rule the rest of the product is, and more strictly: it is instructed never to offer
+        an opinion on whether a spot is dangerous, never to name a condition, and to send you to a
+        doctor if you mention bleeding, a sore that will not heal, rapid growth, or a spot on a palm,
+        sole or nail. If you push it, it refuses.
+      </p>
+      <p style={S}>
+        <strong style={{ color: "var(--fg)" }}>It never receives your photographs.</strong> It can
+        read the text side of your own log — the names you gave your spots, their body sites, dates,
+        photo counts, outcomes and review status — and only when a question actually needs that. It
+        does not read the page you are on. Conversations are kept for the browser session only and
+        are gone when you close the tab, so nothing lingers on a shared computer. Voice is off unless
+        you switch it on.
+      </p>
+
       <h2 style={H}>Who processes your data</h2>
       <p style={S}>
         Supabase (database, authentication and encrypted file storage, EU/Frankfurt); Vercel
         (application hosting); Stripe (payments — Stripe never receives your photos or health data);
-        and for image description, Google (Gemini), OpenAI, Anthropic and OpenRouter. Nothing is sent
-        to an AI provider until you press the button that asks for a description.
+        and for image description and the in-app assistant, Google (Gemini), OpenAI, Anthropic and
+        OpenRouter. Nothing is sent to an AI provider until you press the button that asks for a
+        description, or type a message to the assistant.
       </p>
 
       <h2 style={H}>Terms, briefly</h2>
