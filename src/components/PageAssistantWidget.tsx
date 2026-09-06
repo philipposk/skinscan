@@ -22,7 +22,15 @@ import { GREETING, KNOWLEDGE, PERSONA, SUGGESTIONS } from "@/lib/page-assistant/
  *    machine after the tab closes.
  *
  * No `lang` or `strings`: SkinScan renders in English only, and the SDK's
- * defaults are English.
+ * defaults are English. 0.5.1 made 70 more chrome strings overridable; they are
+ * all already correct here, so there is nothing to override.
+ *
+ * No `showModelPicker: false` either. That flag is for servers that pin the
+ * model and ignore the browser, which is `PA_FIXED_MODEL`. This app does not set
+ * it — `/api/pa/v1/llm/complete` forwards the request body untouched, so the
+ * router honours a client `model` — and hiding a picker that works would be as
+ * dishonest as showing one that doesn't. If the assistant is ever pinned to one
+ * model, set `PA_FIXED_MODEL` and this flag together.
  */
 export default function PageAssistantWidget() {
   useEffect(() => {
@@ -37,7 +45,7 @@ export default function PageAssistantWidget() {
       suggestions: SUGGESTIONS,
       greeting: GREETING,
       voice: true,
-      // Keep the 0.2.0 chrome this app has always shown. 0.5.0 would otherwise
+      // Keep the 0.2.0 chrome this app has always shown. The SDK would otherwise
       // add a chat sidebar, an export button and a larger settings modal, none
       // of which anyone asked for in a mic bug-fix.
       disableChatHistory: true,
