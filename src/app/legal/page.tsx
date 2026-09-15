@@ -135,9 +135,16 @@ export default function LegalPage() {
         <strong style={{ color: "var(--fg)" }}>It never receives your photographs.</strong> It can
         read the text side of your own log — the names you gave your spots, their body sites, dates,
         photo counts, outcomes and review status — and only when a question actually needs that. It
-        does not read the page you are on. Conversations are kept for the browser session only and
-        are gone when you close the tab, so nothing lingers on a shared computer. Voice is off unless
-        you switch it on.
+        does not read the page you are on. Voice is off unless you switch it on.
+      </p>
+      <p style={S}>
+        <strong style={{ color: "var(--fg)" }}>Chats are not saved unless you ask.</strong> By
+        default a conversation lasts until you reload or close the page, so nothing lingers on a
+        shared computer. In the assistant&apos;s settings you can choose to save chats in this
+        browser, or to your account. If you choose your account, your chats are stored with it in
+        the EU (Frankfurt), no other user can see them, and a chat you have not used for 12 months is
+        deleted automatically. You can delete one chat or all of them at any time, and deleting your
+        account deletes them too. Saved chats are included in your data export.
       </p>
 
       <h2 style={H}>Who processes your data</h2>

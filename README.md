@@ -66,7 +66,11 @@ the rest of the app:
   no model rationales.
 - **No destructive capability.** Deleting a spot or an account stays something
   you do with your own hands.
-- Conversations are session-scoped, not persisted to localStorage.
+- Chats are not saved by default: a conversation lasts until the page reloads.
+  Saving is the user's explicit choice in the assistant's settings, either in
+  this browser (kept per signed-in user) or to their account
+  (`skinscan_assistant_chats`, RLS to the owner, deleted after 12 months
+  without activity, included in the export).
 - Every assistant route requires the signed-in session and is metered per user
   per day in Postgres (`skinscan_assistant_take`), because an in-memory counter
   is meaningless on serverless and the LLM keys have a small balance.
