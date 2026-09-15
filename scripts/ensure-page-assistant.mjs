@@ -15,13 +15,21 @@ const built = path.join(dir, "packages", "core", "dist", "index.js");
 const cloneOnly = process.argv.includes("--clone-only");
 const buildOnly = process.argv.includes("--build-only");
 
+/**
+ * The commit the submodule points at. The clone fallback checks out this commit
+ * rather than the default branch, which may not have what this app imports.
+ * Keep it equal to the submodule pointer; test/page-assistant-pin.test.mjs checks.
+ */
+const PIN = "d0d8856ccb28be4e18ce97e9c470083dd3b764ea";
+
 function clone() {
   if (existsSync(built) || existsSync(path.join(dir, "package.json"))) return;
-  console.log("[page-assistant] cloning…");
-  execSync("git clone --depth 1 https://github.com/philipposk/page-assistant.git vendor/page-assistant", {
+  console.log(`[page-assistant] cloning ${PIN.slice(0, 7)}…`);
+  execSync("git clone --filter=blob:none https://github.com/philipposk/page-assistant.git vendor/page-assistant", {
     cwd: root,
     stdio: "inherit",
   });
+  execSync(`git checkout --detach ${PIN}`, { cwd: dir, stdio: "inherit" });
 }
 
 function build() {
