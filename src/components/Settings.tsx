@@ -33,8 +33,9 @@ export default function Settings({ email, accessLog }: { email: string; accessLo
       <section className="card" style={{ padding: "1.25rem", marginBottom: "1rem" }}>
         <h2 style={{ fontSize: "1.05rem", margin: "0 0 0.4rem" }}>Take your data with you</h2>
         <p className="muted" style={{ margin: "0 0 1rem", fontSize: "0.9rem", lineHeight: 1.6 }}>
-          One JSON file with every spot, photo link, assessment, comparison, case and consent record we hold. Photo
-          links stay valid for an hour, so download the images promptly.
+          One JSON file with every spot, photo link, assessment, comparison, case and consent record we hold, plus any
+          assistant chats you chose to save to your account. Photo links stay valid for an hour, so download the images
+          promptly.
         </p>
         <a href="/api/export" className="btn btn-ghost">
           Download everything
