@@ -15,6 +15,14 @@ if (!pin) {
   process.exit(1);
 }
 
+// Fetch the commit itself: cloning a branch and checking out the PIN breaks once the
+// branch the PIN was made on is merged and deleted.
+if (!/git fetch --depth 1 origin \$\{PIN\}/.test(script) || /git clone/.test(script)) {
+  console.error("FAIL  the fallback must fetch the PIN by SHA, not clone a branch");
+  process.exit(1);
+}
+console.log("PASS  clone fallback fetches the PIN by SHA");
+
 let gitlink;
 try {
   // The index, so a staged submodule bump is checked before it is committed.

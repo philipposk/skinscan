@@ -4,7 +4,7 @@
  * file: deps, so it has to exist and be built before next build runs. On a
  * clean CI checkout the submodule directory is empty, hence the clone fallback.
  */
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -16,20 +16,27 @@ const cloneOnly = process.argv.includes("--clone-only");
 const buildOnly = process.argv.includes("--build-only");
 
 /**
- * The commit the submodule points at. The clone fallback checks out this commit
- * rather than the default branch, which may not have what this app imports.
+ * The commit the submodule points at. The fallback fetches this commit by SHA
+ * rather than cloning a branch: the default branch may not have what this app
+ * imports, and the branch the commit was made on can be deleted after a merge.
  * Keep it equal to the submodule pointer; test/page-assistant-pin.test.mjs checks.
  */
 const PIN = "d0d8856ccb28be4e18ce97e9c470083dd3b764ea";
+const REPO = "https://github.com/philipposk/page-assistant.git";
 
 function clone() {
   if (existsSync(built) || existsSync(path.join(dir, "package.json"))) return;
-  console.log(`[page-assistant] cloning ${PIN.slice(0, 7)}…`);
-  execSync("git clone --filter=blob:none https://github.com/philipposk/page-assistant.git vendor/page-assistant", {
-    cwd: root,
-    stdio: "inherit",
-  });
-  execSync(`git checkout --detach ${PIN}`, { cwd: dir, stdio: "inherit" });
+  console.log(`[page-assistant] fetching ${PIN.slice(0, 7)}…`);
+  rmSync(dir, { recursive: true, force: true });
+  mkdirSync(dir, { recursive: true });
+  for (const cmd of [
+    "git init -q",
+    `git remote add origin ${REPO}`,
+    `git fetch --depth 1 origin ${PIN}`,
+    "git checkout -q FETCH_HEAD",
+  ]) {
+    execSync(cmd, { cwd: dir, stdio: "inherit" });
+  }
 }
 
 function build() {
