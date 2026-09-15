@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "node test/bodymap.test.mjs",
+    "test": "node test/bodymap.test.mjs && node test/page-assistant-pin.test.mjs",
     "build:pa": "node scripts/ensure-page-assistant.mjs",
     "postinstall": "node scripts/ensure-page-assistant.mjs --build-only",
     "preinstall": "node scripts/ensure-page-assistant.mjs --clone-only"

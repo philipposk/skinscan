@@ -11,7 +11,7 @@ export async function GET() {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
 
-  const [profile, lesions, images, assessments, changes, cases, reviews, consents, audit] = await Promise.all([
+  const [profile, lesions, images, assessments, changes, cases, reviews, consents, audit, chats] = await Promise.all([
     supabase.from("skinscan_profiles").select("*").eq("id", user.id).maybeSingle(),
     supabase.from("skinscan_lesions").select("*").eq("user_id", user.id),
     supabase.from("skinscan_images").select("*").eq("user_id", user.id),
@@ -21,6 +21,8 @@ export async function GET() {
     supabase.from("skinscan_reviews").select("*"),
     supabase.from("skinscan_consents").select("*").eq("user_id", user.id),
     supabase.from("skinscan_audit").select("*").eq("subject_user_id", user.id),
+    // Only chats the user chose to save to their account; empty otherwise.
+    supabase.from("skinscan_assistant_chats").select("*").eq("user_id", user.id),
   ]);
 
   // Signed links so the export is actually usable — the photos are the point.
@@ -45,6 +47,7 @@ export async function GET() {
     reviews: reviews.data,
     consents: consents.data,
     access_log: audit.data,
+    assistant_chats: chats.data,
   };
 
   return new NextResponse(JSON.stringify(payload, null, 2), {
