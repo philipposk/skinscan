@@ -21,7 +21,7 @@ const buildOnly = process.argv.includes("--build-only");
  * imports, and the branch the commit was made on can be deleted after a merge.
  * Keep it equal to the submodule pointer; test/page-assistant-pin.test.mjs checks.
  */
-const PIN = "d0d8856ccb28be4e18ce97e9c470083dd3b764ea";
+const PIN = "1ae9432b1fab700cbfd7fffe81ef3ffdb10eb96a";
 const REPO = "https://github.com/philipposk/page-assistant.git";
 
 function clone() {
