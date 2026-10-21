@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LIMITATIONS, RISK_BANDS } from "@/lib/clinical";
+import { paymentsLive } from "@/lib/payments";
 
 const STEPS = [
   {
@@ -184,7 +185,12 @@ export default function Home() {
             </p>
           </div>
           <div className="card" style={{ padding: "1.25rem", borderColor: "var(--brand)" }}>
-            <h3 style={{ margin: "0 0 0.2rem" }}>Dermatologist opinion</h3>
+            <h3 style={{ margin: "0 0 0.2rem" }}>
+              Dermatologist opinion
+              {!paymentsLive() && (
+                <span className="label" style={{ display: "inline-block", marginLeft: "0.5rem", verticalAlign: "middle" }}>Coming soon</span>
+              )}
+            </h3>
             <p style={{ fontSize: "1.7rem", fontWeight: 700, margin: "0 0 0.6rem" }}>
               €29 <span style={{ fontSize: "0.9rem", fontWeight: 500, color: "var(--fg-soft)" }}>per case</span>
             </p>
