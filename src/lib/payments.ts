@@ -1,3 +1,4 @@
-// True once Stripe is configured on this deployment. Until then the paid review is shown as
-// "Coming soon" instead of a button that fails at checkout. Server-only: reads a secret's presence.
-export const paymentsLive = (): boolean => Boolean(process.env.STRIPE_SECRET_KEY);
+// Paid reviews stay visible but can't be bought until payments are switched on. A Stripe key being
+// present is not enough (production already has keys while checkout isn't set up), so this is an
+// explicit build-time switch: set NEXT_PUBLIC_BILLING_ENABLED=true and redeploy to go live.
+export const paymentsLive = (): boolean => process.env.NEXT_PUBLIC_BILLING_ENABLED === "true";
