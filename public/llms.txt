@@ -1,0 +1,14 @@
+# SkinScan
+
+> Photograph a mole, pin it on a 3D body map, and see what it does over months. AI describes what it sees; an optional real dermatologist can review it. SkinScan records and describes. It never diagnoses.
+
+## Pages
+- / — Home and overview
+- /login — Sign in
+- /legal — Privacy, terms and medical disclaimer
+
+## Not for crawling
+- /app, /doctor, /onboarding, /api — private health data behind sign-in
+
+## Contact
+Built on the 6x7 platform (https://6x7.gr)
