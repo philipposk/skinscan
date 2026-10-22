@@ -24,7 +24,6 @@ export const metadata: Metadata = {
     description: "A photo diary for your skin, with AI that describes what it sees and a dermatologist you can ask.",
     images: ["/og-image.png"],
   },
-  alternates: { canonical: "/" },
   manifest: "/manifest.webmanifest",
   icons: { icon: "/icon.svg", apple: "/icon-192.png" },
   // Health data. Nothing under /app or /doctor should ever be indexed.
