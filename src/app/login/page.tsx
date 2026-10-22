@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { GoogleIdentityButton } from "@/components/GoogleIdentityButton";
 
 function LoginForm() {
   const supabase = createClient();
@@ -61,9 +62,11 @@ function LoginForm() {
             </p>
           ) : (
             <>
-              <button onClick={signInWithGoogle} className="btn btn-ghost" style={{ width: "100%", marginBottom: "0.85rem" }}>
-                Continue with Google
-              </button>
+              <GoogleIdentityButton getSupabase={() => supabase} onSignedIn={() => window.location.assign(next)} onError={setError}>
+                <button onClick={signInWithGoogle} className="btn btn-ghost" style={{ width: "100%", marginBottom: "0.85rem" }}>
+                  Continue with Google
+                </button>
+              </GoogleIdentityButton>
 
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", margin: "0.85rem 0", fontSize: "0.78rem", color: "var(--fg-soft)" }}>
                 <span style={{ height: 1, flex: 1, background: "var(--line)" }} />
