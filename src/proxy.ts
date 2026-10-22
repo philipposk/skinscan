@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { trackAppAccess } from "./app-access";
 
 const cookieDomain =
   process.env.NODE_ENV === "production" ? ".6x7.gr" : undefined;
@@ -81,6 +82,7 @@ export async function proxy(request: NextRequest) {
   // request through. The /app, /doctor and /onboarding layouts check the session themselves.
   if (!result || result.error?.name === "AuthRetryableFetchError") return response;
 
+  await trackAppAccess(supabase, result.data.user, request, response, "skinscan");
   if (isProtected(path) && !result.data.user) return toLogin(request, path);
 
   return response;
