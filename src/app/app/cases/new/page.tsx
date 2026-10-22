@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import NewCase from "@/components/NewCase";
+import { paymentsLive } from "@/lib/payments";
 import type { Lesion } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +19,7 @@ export default async function NewCasePage() {
         tell you when they cannot answer from a photo and you need to be seen. That is a real answer too.
       </p>
       <Suspense>
-        <NewCase lesions={(data ?? []) as Lesion[]} priceCents={Number(process.env.CASE_PRICE_CENTS ?? 2900)} />
+        <NewCase lesions={(data ?? []) as Lesion[]} priceCents={Number(process.env.CASE_PRICE_CENTS ?? 2900)} paymentsLive={paymentsLive()} />
       </Suspense>
     </>
   );

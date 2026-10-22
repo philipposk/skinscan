@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Field, RiskBadge } from "@/components/ui";
 import type { Lesion } from "@/lib/types";
 
-export default function NewCase({ lesions, priceCents }: { lesions: Lesion[]; priceCents: number }) {
+export default function NewCase({ lesions, priceCents, paymentsLive }: { lesions: Lesion[]; priceCents: number; paymentsLive: boolean }) {
   const params = useSearchParams();
   const preselect = params.get("lesion");
   const [picked, setPicked] = useState<string[]>(preselect ? [preselect] : []);
@@ -17,6 +17,7 @@ export default function NewCase({ lesions, priceCents }: { lesions: Lesion[]; pr
   const withPhotos = lesions.filter((l) => l.image_count > 0);
 
   async function submit() {
+    if (!paymentsLive) return;
     if (!picked.length) return setError("Pick at least one spot.");
     setBusy(true);
     setError(null);
@@ -110,13 +111,26 @@ export default function NewCase({ lesions, priceCents }: { lesions: Lesion[]; pr
 
       {error && <p style={{ color: "#b91c1c", fontSize: "0.88rem", margin: "0 0 0.75rem" }}>{error}</p>}
 
-      <button className="btn btn-primary" onClick={submit} disabled={busy} style={{ width: "100%", padding: "0.85rem" }}>
-        {busy ? "Opening payment…" : `Continue to payment — €${(priceCents / 100).toFixed(2)}`}
-      </button>
-      <p className="muted" style={{ fontSize: "0.79rem", margin: "0.75rem 0 0", lineHeight: 1.55, textAlign: "center" }}>
-        Payment is handled by Stripe; we never see your card details and Stripe never sees your photos. If no
-        dermatologist answers within 48 hours you are refunded in full.
-      </p>
+      {paymentsLive ? (
+        <>
+          <button className="btn btn-primary" onClick={submit} disabled={busy} style={{ width: "100%", padding: "0.85rem" }}>
+            {busy ? "Opening payment…" : `Continue to payment — €${(priceCents / 100).toFixed(2)}`}
+          </button>
+          <p className="muted" style={{ fontSize: "0.79rem", margin: "0.75rem 0 0", lineHeight: 1.55, textAlign: "center" }}>
+            Payment is handled by Stripe; we never see your card details and Stripe never sees your photos. If no
+            dermatologist answers within 48 hours you are refunded in full.
+          </p>
+        </>
+      ) : (
+        <>
+          <button className="btn btn-primary" disabled aria-disabled="true" style={{ width: "100%", padding: "0.85rem" }}>
+            Coming soon
+          </button>
+          <p className="muted" style={{ fontSize: "0.79rem", margin: "0.75rem 0 0", lineHeight: 1.55, textAlign: "center" }}>
+            Dermatologist reviews open soon. Your spots, photos and change tracking keep working for free in the meantime.
+          </p>
+        </>
+      )}
     </div>
   );
 }
