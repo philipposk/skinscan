@@ -1,0 +1,1 @@
+alter policy p_skinscan_obj_owner on storage.objects using (((bucket_id = 'skinscan'::text) AND ((storage.foldername(name))[1] = ((select auth.uid()))::text))) with check (((bucket_id = 'skinscan'::text) AND ((storage.foldername(name))[1] = ((select auth.uid()))::text)));
