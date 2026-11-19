@@ -2,8 +2,12 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { trackAppAccess } from "./app-access";
 
-const cookieDomain =
-  process.env.NODE_ENV === "production" ? ".6x7.gr" : undefined;
+function cookieDomainFor(host?: string | null): string | undefined {
+  if (process.env.NODE_ENV !== "production") return undefined;
+  const h = (host ?? "").split(":")[0].toLowerCase();
+  // .6x7.dk mirror gets its own shared cookie domain; every other host keeps .6x7.gr (unchanged).
+  return h === "6x7.dk" || h.endsWith(".6x7.dk") ? ".6x7.dk" : ".6x7.gr";
+}
 
 const COOKIE_NAME = "sb-6x7-auth";
 
@@ -49,7 +53,7 @@ export async function proxy(request: NextRequest) {
     {
       cookieOptions: {
         name: COOKIE_NAME,
-        domain: cookieDomain,
+        domain: cookieDomainFor((((h)=>h.get("x-forwarded-host") ?? h.get("host"))(request.headers))),
         path: "/",
         sameSite: "lax",
         secure: process.env.NODE_ENV === "production",
